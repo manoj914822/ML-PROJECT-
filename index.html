@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>CardiScan: Streamlit Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.63.1/build/stlite.css"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.63.1/build/stlite.js"></script>
+    <script>
+      // Load the app.py and heart_disease_data.csv into stlite
+      async function main() {
+        const pyCodeResponse = await fetch('/app.py');
+        const pyCode = await pyCodeResponse.text();
+
+        const csvResponse = await fetch('/heart_disease_data.csv');
+        const csvData = await csvResponse.text();
+
+        stlite.mount(
+          {
+            requirements: ["pandas", "numpy", "plotly", "matplotlib", "seaborn"], // Specify python packages
+            entrypoint: "app.py",
+            files: {
+              "app.py": pyCode,
+              "heart_disease_data.csv": csvData,
+            },
+          },
+          document.getElementById("root")
+        );
+      }
+      main();
+    </script>
+  </body>
+</html>
